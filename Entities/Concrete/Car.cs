@@ -17,7 +17,6 @@ namespace Entities.Concrete
 
 
         [Required]
-        [Column(TypeName ="smallint")]
         public int BrandId { get; set; }
         
 

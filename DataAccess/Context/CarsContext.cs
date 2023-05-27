@@ -10,6 +10,17 @@ namespace DataAccess.Context
 {
     public class CarsContext : DbContext
     {
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                var connectionString = "Server=localhost;Database=Cars;UID=root;PWD=123+abc+;Charset=utf8;SslMode=none";
+                optionsBuilder.UseMySql(connectionString, MySqlServerVersion.LatestSupportedServerVersion);
+            }
+
+            optionsBuilder.EnableSensitiveDataLogging();
+        }
+
         public DbSet<Car> Cars { get; set; }
         public DbSet<Brand> Brands { get; set; }
     
