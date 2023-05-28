@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstract;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs.Car;
@@ -21,30 +22,29 @@ namespace Business.Concrete
             _mapper = mapper;
         }
 
-        public void CreateCar(CarDtoForCreate carDto)
+        public IResult CreateCar(CarDtoForCreate carDto)
         {
             var car = _mapper.Map<Car>(carDto);
             _carDal.Add(car);
+            return new SuccessResult();
         }
 
-        public IEnumerable<CarDetailDto> GetCars()
+        public IDataResult<List<CarDetailDto>> GetCars()
         {
             var result = _carDal.GetCarsDetails().ToList();
-            return result;
+            return new SuccessDataResult<List<CarDetailDto>>(result);
         }
 
-        public IEnumerable<CarDetailDto> GetCarsByBrandId(int brandId)
+        public IDataResult<List<CarDetailDto>> GetCarsByBrandId(int brandId)
         {
             var result = _carDal.GetCarsDetails(s=>s.BrandId == brandId).ToList();
-            return result;
+            return new SuccessDataResult<List<CarDetailDto>>(result);
         }
 
-        public CarDetailDto GetCar(int carId)
+        public IDataResult<CarDetailDto> GetCar(int carId)
         {
             var result = _carDal.GetCarDetail(s=> s.Id == carId);
-            return result;
+            return new SuccessDataResult<CarDetailDto>(result);
         }
-
-
     }
 }

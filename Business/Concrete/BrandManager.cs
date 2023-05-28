@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -16,14 +17,14 @@ namespace Business.Concrete
         {
             _brandDal = brandDal;
         }
-        public IEnumerable<Brand> GetBrands()
+        public IDataResult<List<Brand>> GetBrands()
         {
-            var result = _brandDal.GetAll();
+            var result = _brandDal.GetAll().ToList();
             if (result.Any())
             {
-                return result;
+                return new SuccessDataResult<List<Brand>>(result);
             }
-            return Enumerable.Empty<Brand>();
+            return new ErrorDataResult<List<Brand>>();
         }
     }
 }
