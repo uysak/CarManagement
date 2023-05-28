@@ -1,9 +1,13 @@
 ﻿using Core.Entities.Concrete;
+using Core.Utilities.Security.JWT;
+using Core.Utilities.Security.JWT.Hashing;
 using Entities.Concrete;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
@@ -12,6 +16,13 @@ namespace DataAccess.Context
 {
     public class EfDbInitializer
     {
+        private ITokenHelper _tokenHelper;
+
+        public EfDbInitializer(ITokenHelper tokenHelper)
+        {
+            _tokenHelper = tokenHelper;   
+        }
+
         public static void Migrate(CarsContext db)
         {
             db.Database.Migrate();
@@ -22,6 +33,7 @@ namespace DataAccess.Context
             AddDefaultBrands(db);
             AddDefaultCars(db);
             AddDefaultRoles(db);
+            AddDefaultAdmin(db);
         }
 
         public static void AddDefaultBrands(CarsContext db)
@@ -385,5 +397,52 @@ namespace DataAccess.Context
 
             db.SaveChanges();
         }
+
+        public static void AddDefaultAdmin(CarsContext db)
+        {
+            if(db.Users.Any())
+            {
+                return;
+            }
+
+            byte[] passwordHash, passwordSalt;
+            HashingHelper.CreatePasswordHash("admin", out passwordHash, out passwordSalt);
+
+            var user = new User
+            {
+                Id = 1,
+                Email = "admin@lydiasoft.com",
+                FirstName = "admin",
+                LastName = "admin",
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+            };
+
+            var role = new List<Role>
+            {
+                new Role{Name = "Admin"}
+            };
+
+            var refreshToken = new RefreshToken
+            {
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                ExpireDate = DateTime.Now.AddDays(7),
+                CreatedDate = DateTime.Now
+            };
+
+            user.RefreshToken = refreshToken.Token;
+            user.TokenCreated = refreshToken.CreatedDate;
+            user.TokenExpire = refreshToken.ExpireDate;
+
+            db.Users.Add(user);
+            db.UserRoles.Add(new UserRole
+            {
+                UserId = 1,
+                RoleId = 1
+            });
+
+            db.SaveChanges();
+        }
+
     }
 }

@@ -15,7 +15,7 @@ namespace DataAccess.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connectionString = "Server=localhost;Database=Cars;UID=root;PWD=123+abc+;Charset=utf8;SslMode=none";
+                var connectionString = "Server=localhost;Database=Cars2;UID=root;PWD=123+abc+;Charset=utf8;SslMode=none";
                 optionsBuilder.UseMySql(connectionString, MySqlServerVersion.LatestSupportedServerVersion);
             }
 
