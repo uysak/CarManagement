@@ -1,29 +1,35 @@
 ﻿using AutoMapper;
 using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs.Car;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
     public class CarManager : ICarService
     {
         private ICarDal _carDal;
+        private IBrandDal _brandDal;
+
         private IMapper _mapper;
-        public CarManager(ICarDal carDal, IMapper mapper)
+        public CarManager(ICarDal carDal,IBrandDal brandDal, IMapper mapper)
         {
             _carDal = carDal;
+            _brandDal = brandDal;
             _mapper = mapper;
         }
 
         public IResult CreateCar(CarDtoForCreate carDto)
         {
+            var check = BusinessRules.Run(CheckIfBrandExist(carDto.BrandId),CheckIfCarModelNotExist(carDto.Model));
+
+            if(check.Success == false)
+            {
+                return new ErrorResult(Messages.BrandNotExists);
+            }
             var car = _mapper.Map<Car>(carDto);
             _carDal.Add(car);
             return new SuccessResult();
@@ -46,5 +52,28 @@ namespace Business.Concrete
             var result = _carDal.GetCarDetail(s=> s.Id == carId);
             return new SuccessDataResult<CarDetailDto>(result);
         }
+
+        public IResult CheckIfBrandExist(int brandId)
+        {
+            var brandCheck = _brandDal.Get(b=>b.Id == brandId);
+            if(brandCheck != null)
+            {
+                return new SuccessResult();
+            }
+            return new ErrorResult();
+        }
+
+        public IResult CheckIfCarModelNotExist(string model)
+        {
+            var modelCheck = _carDal.Get(c=>c.Model == model);
+
+            if (modelCheck == null)
+            {
+                return new SuccessResult();
+            }
+            return new ErrorResult();
+        }
+
+
     }
 }

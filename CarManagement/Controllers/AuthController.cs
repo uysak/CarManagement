@@ -2,6 +2,7 @@
 using Business.Constants;
 using Entities.DTOs;
 using Entities.DTOs.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarManagementAPI.Controllers
@@ -60,7 +61,6 @@ namespace CarManagementAPI.Controllers
         }
 
 
-
         [HttpPost("refresh-token")]
         public async Task<ActionResult<string>> RefreshToken(string? refreshToken)
         {
@@ -90,7 +90,7 @@ namespace CarManagementAPI.Controllers
                 return Content(result.Data.ToString(), "application/json");
             }
             return BadRequest(result.Message);
-
         }
+
     }
 }

@@ -9,6 +9,7 @@ namespace Business.Constants
 {
     public class Messages
     {
+        public static string BrandNotExists { get; set; } = "Böyle bir marka mevcut değil.";
         public static string UserNotFound { get; set; } = "Kullanıcı Bulunamadı.";
         public static string PasswordError { get; set; } = "Parola Hatalı.";
         public static string SuccessfulLogin { get; set; } = "Kullanıcı girişi başarılı.";
