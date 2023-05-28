@@ -16,6 +16,7 @@ namespace CarManagementAPI.Controllers
             _carService = carService;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult CreateCar(CarDtoForCreate carDto)
         {
@@ -23,7 +24,6 @@ namespace CarManagementAPI.Controllers
             return Ok();
         }
 
-        [Authorize(Roles ="Admin")]
         [HttpGet("GetAll")]
         public IActionResult GetAllCars()
         {
