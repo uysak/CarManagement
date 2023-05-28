@@ -1,6 +1,6 @@
-﻿using DataAccess.Abstract;
+﻿using Core.Entities.Abstract;
+using DataAccess.Abstract;
 using DataAccess.Context;
-using Entities.Abstract;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

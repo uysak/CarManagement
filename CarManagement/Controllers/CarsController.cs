@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Entities.Concrete;
 using Entities.DTOs.Car;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarManagementAPI.Controllers
@@ -22,6 +23,7 @@ namespace CarManagementAPI.Controllers
             return Ok();
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpGet("GetAll")]
         public IActionResult GetAllCars()
         {

@@ -1,4 +1,5 @@
-﻿using Entities.Concrete;
+﻿using Core.Entities.Concrete;
+using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace DataAccess.Context
         {
             AddDefaultBrands(db);
             AddDefaultCars(db);
+            AddDefaultRoles(db);
         }
 
         public static void AddDefaultBrands(CarsContext db)
@@ -357,6 +359,28 @@ namespace DataAccess.Context
                 BrandId = 10,
                 Model = "Equinox",
                 ModelYear = 2018
+            });
+
+            db.SaveChanges();
+        }
+
+        public static void AddDefaultRoles(CarsContext db)
+        {
+            if (db.Roles.Any())
+            {
+                return;
+            }
+
+            db.Roles.Add(new Role
+            {
+                Id = 1,
+                Name = "Admin"
+            });
+
+            db.Roles.Add(new Role
+            {
+                Id = 2,
+                Name = "User"
             });
 
             db.SaveChanges();
