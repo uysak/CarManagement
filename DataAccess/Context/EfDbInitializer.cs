@@ -411,7 +411,7 @@ namespace DataAccess.Context
             var user = new User
             {
                 Id = 1,
-                Email = "admin@lydiasoft.com",
+                Email = "admin@admin.com",
                 FirstName = "admin",
                 LastName = "admin",
                 PasswordHash = passwordHash,

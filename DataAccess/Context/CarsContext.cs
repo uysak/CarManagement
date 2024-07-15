@@ -15,8 +15,14 @@ namespace DataAccess.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connectionString = "Server=localhost;Database=Cars2;UID=root;PWD=123+abc+;Charset=utf8;SslMode=none";
-                optionsBuilder.UseMySql(connectionString, MySqlServerVersion.LatestSupportedServerVersion);
+                var connectionString = "Server=localhost;Database=Cars3;UID=root;PWD=123+abc+;Charset=utf8;SslMode=none";
+                optionsBuilder.UseMySql(connectionString,
+                                        MySqlServerVersion.LatestSupportedServerVersion,
+                                        mySqlOptions => mySqlOptions.EnableRetryOnFailure(
+                                            maxRetryCount: 5, // Yeniden deneme sayısı
+                                            maxRetryDelay: TimeSpan.FromSeconds(10), // Yeniden deneme aralığı
+                                            errorNumbersToAdd: null // Yeniden deneme yapılacak hata numaraları (null ise tüm hatalar için)
+                                        ));
             }
 
             optionsBuilder.EnableSensitiveDataLogging();

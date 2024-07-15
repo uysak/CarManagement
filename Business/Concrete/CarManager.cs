@@ -26,7 +26,7 @@ namespace Business.Concrete
         {
             var check = BusinessRules.Run(CheckIfBrandExist(carDto.BrandId),CheckIfCarModelNotExist(carDto.Model));
 
-            if(check.Success == false)
+            if(check != null && check.Success == false)
             {
                 return new ErrorResult(Messages.BrandNotExists);
             }
